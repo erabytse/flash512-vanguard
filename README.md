@@ -3,8 +3,6 @@
 **Next-Gen Cryptographic Matrix & Phase Mutation Engine.**  
 *Engineered for extreme privacy, designed for the international cybersecurity community.*
 
-[![License: AGPL v3](https://img.shields.io)](https://opensource.org)
-[![Python 3.8+](https://img.shields.io)](https://www.python.org)
 
 ## 🛡️ Why Flash512-Vanguard?
 
@@ -59,6 +57,7 @@ print(f"Secure Token: {token}")
 # Decrypt
 original = Flash512Vanguard.open(token, "MyUltraStrongSecret")
 print(f"Decrypted: {original}")
+```
 
 📜 Commercial Strategy & Licensing
 
