@@ -50,15 +50,15 @@ setx FLASH512_VANGUARD_CORE "your-purchased-license-key"
 
 
 ```python
-from flash512 import Flash512Vanguard
+  from flash512 import Flash512Vanguard
 
-# Encrypt
-token = Flash512Vanguard.protect("Classified Data", "MyUltraStrongSecret")
-print(f"Secure Token: {token}")
-
-# Decrypt
-original = Flash512Vanguard.open(token, "MyUltraStrongSecret")
-print(f"Decrypted: {original}")
+  # Encrypt
+  token = Flash512Vanguard.protect("Classified Data", "MyUltraStrongSecret")
+  print(f"Secure Token: {token}")
+  
+  # Decrypt
+  original = Flash512Vanguard.open(token, "MyUltraStrongSecret")
+  print(f"Decrypted: {original}")
 
 📜 Commercial Strategy & Licensing
 
