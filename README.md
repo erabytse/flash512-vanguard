@@ -59,7 +59,7 @@ print(f"Secure Token: {token}")
 # Decrypt
 original = Flash512Vanguard.open(token, "MyUltraStrongSecret")
 print(f"Decrypted: {original}")
-
+```
 
 ##📜 Commercial Strategy & Licensing
 
