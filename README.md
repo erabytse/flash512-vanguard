@@ -5,6 +5,8 @@
 
 [![License: AGPL v3](https://img.shields.io)](https://opensource.org)
 [![Python 3.8+](https://img.shields.io)](https://www.python.org)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/python)
+
 
 ## 🛡️ Why Flash512-Vanguard?
 
