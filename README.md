@@ -61,6 +61,6 @@ original = Flash512Vanguard.open(token, "MyUltraStrongSecret")
 print(f"Decrypted: {original}")
 ```
 
-##📜 Commercial Strategy & Licensing
+###📜 Commercial Strategy & Licensing
 
 This project is released under the AGPLv3 License. For commercial integration into proprietary software without disclosing your source code, please contact the author for a Commercial License.
