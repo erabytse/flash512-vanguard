@@ -50,16 +50,17 @@ setx FLASH512_VANGUARD_CORE "your-purchased-license-key"
 
 
 ```python
-  from flash512 import Flash512Vanguard
+from flash512 import Flash512Vanguard
 
-  # Encrypt
-  token = Flash512Vanguard.protect("Classified Data", "MyUltraStrongSecret")
-  print(f"Secure Token: {token}")
-  
-  # Decrypt
-  original = Flash512Vanguard.open(token, "MyUltraStrongSecret")
-  print(f"Decrypted: {original}")
+# Encrypt
+token = Flash512Vanguard.protect("Classified Data", "MyUltraStrongSecret")
+print(f"Secure Token: {token}")
 
-📜 Commercial Strategy & Licensing
+# Decrypt
+original = Flash512Vanguard.open(token, "MyUltraStrongSecret")
+print(f"Decrypted: {original}")
+
+
+##📜 Commercial Strategy & Licensing
 
 This project is released under the AGPLv3 License. For commercial integration into proprietary software without disclosing your source code, please contact the author for a Commercial License.
