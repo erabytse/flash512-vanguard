@@ -18,6 +18,8 @@ classifiers = [
     "Topic :: Security :: Cryptography",
 ]
 
+[tool.setuptools.packages.find]
+include = ["flash512*"]
+
 [project.urls]
 "Homepage" = "https://github.com"
-"Bug Tracker" = "https://github.com/issues"
