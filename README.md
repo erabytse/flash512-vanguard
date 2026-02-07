@@ -61,4 +61,4 @@ print(f"Decrypted: {original}")
 
 📜 Commercial Strategy & Licensing
 
-This project is released under the AGPLv3 License. For commercial integration into proprietary software without disclosing your source code, please contact the author for a Commercial License.
+This project is released under the License apache 2.0. For commercial integration into proprietary software without disclosing your source code, please contact the author for a Commercial License.
