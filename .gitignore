@@ -6,3 +6,7 @@ build/
 *.egg-info/
 .env
 .venv/
+.menv/
+*.pyc
+*.pyo
+*.log
