@@ -1,23 +1,18 @@
 """
-Flash512-Vanguard Pro v2.0
-Bibliothèque de chiffrement sécurisée pour Python.
-
-Usage rapide :
-    from flash512 import Flash512Vanguard
-    
-    # Chiffrer
-    token = Flash512Vanguard.protect("données sensibles", "mon-password")
-    
-    # Déchiffrer
-    data = Flash512Vanguard.open(token, "mon-password")
-
-Configuration :
-    Définir la variable d'environnement FLASH512_VANGUARD_CORE
-    ou créer un fichier .env à la racine du projet.
+Flash512-Vanguard v2.1 - Military Grade Encryption
 """
+import sys
+import platform
 
-from .compat.legacy_wrapper import Flash512Vanguard
+# Empêcher l'écriture de core dumps en cas de crash (Military Grade)
+if platform.system() == 'Linux':
+    import resource
+    try:
+        resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
+    except Exception:
+        pass
+from .engine import Flash512Vanguard
+from .secure_memory import SecureBuffer, secure_open
 
-__version__ = "2.0.0.post1"
-__author__ = "erabytse"
-__all__ = ["Flash512Vanguard"]
+__version__ = "2.1.0"
+__all__ = ['Flash512Vanguard', 'SecureBuffer', 'secure_open']

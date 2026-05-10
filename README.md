@@ -1,4 +1,5 @@
-# ⚡ Flash512-Vanguard Pro v2.0
+# ⚡ Flash512-Vanguard Bastion v2.1
+## 🔐 Military Grade Hardened Encryption
 
 [![PyPI version](https://badge.fury.io/py/flash512-vanguard.svg)](https://pypi.org/project/flash512-vanguard/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
@@ -79,10 +80,10 @@ While the core engine is open-source under **Apache 2.0**, erabytse offers profe
 
 ## 💻 Quick Start
 
-### 🔧 Installation
+### 🔧 Installation v2.1
 
 ```bash
-pip install flash512-vanguard
+pip install flash512-vanguard==2.1.0
 ```
 ## 🔑 Configuration
 Before using the engine, you must provision your Internal Core Secret. 
