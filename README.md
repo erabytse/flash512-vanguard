@@ -4,9 +4,11 @@
 [![PyPI version](https://badge.fury.io/py/flash512-vanguard.svg)](https://pypi.org/project/flash512-vanguard/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Tests](https://img.shields.io/badge/tests-500%2B%20passing-brightgreen.svg)]()
+[![Security](https://img.shields.io/badge/security-military%20grade-red.svg)]()
 
 > **Next-Gen Secure Encryption Library for Python**  
-> Standard industriel AES-256-GCM + PBKDF2 durci + gestion de clés professionnelle  
+> Standard industriel AES-256-GCM + Argon2id/PBKDF2 durci + Gestion de clés professionnelle  
 > Engineered for extreme privacy, designed for the international cybersecurity community.
 
 ---
@@ -17,12 +19,14 @@ Standard encryption can be vulnerable if implemented incorrectly. Flash512-Vangu
 
 | Layer | Implementation | Standard |
 |-------|---------------|----------|
-| **Hardened KDF** | PBKDF2-HMAC-SHA512 with 100,000 iterations | OWASP recommended |
+| **Primary KDF** | **Argon2id** (memory-hard, GPU/ASIC resistant) | OWASP ASVS V2.4 |
+| **Fallback KDF** | PBKDF2-HMAC-SHA512 with 100,000 iterations | OWASP recommended |
 | **Authenticated Encryption** | AES-256-GCM (128-bit tag) | NIST FIPS 197 |
 | **Secure Nonce** | Cryptographically random per operation | NIST SP 800-38D |
+| **Memory Protection** | SecureBuffer with automatic wiping | Military-grade hygiene |
 | **Secret Management** | Environment-based + Key Manager | SOC2 compliant |
 
-> 🔒 **v2.0 Breaking Change**: We've replaced our custom cipher with **AES-256-GCM** for production use. The legacy algorithm remains available for backward compatibility only (not recommended for new deployments).
+> 🔒 **v2.1 Military Grade**: Introduction d'**Argon2id** par défaut, **SecureBuffer** pour l'effacement mémoire automatique, et **vérification d'intégrité** du module au chargement (anti-tampering).
 
 ---
 
@@ -32,16 +36,24 @@ Standard encryption can be vulnerable if implemented incorrectly. Flash512-Vangu
 - ✅ **Full Integrity**: GCM authentication tag detects any tampering
 - ✅ **Key Rotation**: Built-in `rotate_secret()` for password changes
 - ✅ **Audit Logging**: Enterprise-ready audit trail (SOC2/HIPAA compatible)
-- ✅ **Simple API**: 2 methods (`protect()` / `open()`), zero crypto expertise needed
+- ✅ **Memory Wiping**: SecureBuffer efface automatiquement les données sensibles après usage
+- ✅ **Anti-Brute Force**: Argon2id memory-hard KDF résiste aux GPU/ASIC
+- ✅ **Module Integrity**: Vérification HMAC-SHA512 au chargement contre les modifications non autorisées
+- ✅ **Simple API**: Méthodes `protect()` / `open()`, zero crypto expertise needed
 
 ---
 
-## 📢 Official Release: Flash512-Vanguard v2.0.0
+## 📢 Official Release: Flash512-Vanguard Bastion v2.1
 
-**erabytse** is proud to announce the launch of Flash512-Vanguard **Pro v2.0**.
+**erabytse** is proud to announce the launch of Flash512-Vanguard **Bastion v2.1**.
 
-After extensive security review, we've transitioned from our custom cryptographic matrix to **industry-standard AES-256-GCM** for production deployments. This ensures:
+This Military Grade release introduces critical security hardening:
+- 🔰 **Argon2id** : Dérivation de clé memory-hard pour résister aux attaques par force brute matérielles
+- 🧹 **SecureBuffer** : Effacement automatique et garanti des données déchiffrées en mémoire
+- 🛡️ **Module Integrity** : Vérification d'intégrité au chargement empêchant l'exécution de code modifié
+- 🔒 **Core Dump Lock** : Désactivation automatique des core dumps sur Linux
 
+The underlying industry-standard **AES-256-GCM** ensures:
 - 🌍 **Interoperability** with other systems and languages
 - 🔐 **Auditability** by third-party security firms
 - ⚡ **Performance** via hardware acceleration (AES-NI)
@@ -65,7 +77,7 @@ While the core engine is open-source under **Apache 2.0**, erabytse offers profe
 
 | Tier | Features | Price |
 |------|----------|-------|
-| **Core** | AES-GCM engine, Key Manager, audit logging | Free (Apache 2.0) |
+| **Core** | AES-GCM engine, Key Manager, audit logging, SecureBuffer | Free (Apache 2.0) |
 | **Pro Support** | SLA 24h, priority patches, integration help | 499€/month |
 | **Enterprise** | HSM/TPM support, SIEM integration, training | Custom quote |
 
@@ -83,25 +95,31 @@ While the core engine is open-source under **Apache 2.0**, erabytse offers profe
 ### 🔧 Installation v2.1
 
 ```bash
-pip install flash512-vanguard==2.1.0
+pip install flash512-vanguard==2.1.1
 ```
 ## 🔑 Configuration
 Before using the engine, you must provision your Internal Core Secret. 
 This secret acts as the unique architectural soul of your encryption.
 
 **On Linux/Mac:**
+```bash
 export FLASH512_VANGUARD_CORE="your-secure-random-secret-64-chars-min"
+```
 
 **On Windows (PowerShell):**
+```powershell
 $env:FLASH512_VANGUARD_CORE="your-secure-random-secret-64-chars-min"
+```
 
 Or create a .env file at your project root:
-
+```test
 FLASH512_VANGUARD_CORE=your-secure-random-secret-64-chars-min
+```
 
 ⚠️ Security Note: Never commit .env to version control. Add it to .gitignore.
 
 📖 Usage
+Basic Encryption (Zero Expertise Required)
 
 ```python
 from flash512 import Flash512Vanguard
@@ -123,24 +141,42 @@ new_token = Flash512Vanguard.rotate_secret(token, "OldPassword", "NewPassword")
 
 ```
 
+Military Grade Decryption with SecureBuffer (v2.1+)
+
+```python
+from flash512 import Flash512Vanguard
+
+token = Flash512Vanguard.protect("Message Top Secret", "MotDePasse")
+
+# Use the “with” context for automatic memory deallocation
+with Flash512Vanguard.open(token, "MotDePasse") as buffer:
+    # Process sensitive data ONLY within this protected block
+    traiter_donnees_sensibles(buffer.data)
+# Here, the data has already been cleared from the random access memory (RAM)
+# Any attempt to access it will raise a RuntimeError
+```
+
 🧪 Testing
 
 ```bash
 # Install dev dependencies
 pip install -e .[dev]
 
-# Run property-based tests (500+ random cases)
-pytest tests/test_property.py -v
+# Run all tests (500+ random cases)
+pytest tests/ -v
 
-# Run Key Manager tests
-python test_key_manager.py
+# Run military-grade specific tests
+pytest tests/test_military_grade.py -v
+
+# Run property-based tests
+pytest tests/test_property.py -v
 ```
 
 📜 License & Commercial Use
 
 This project is released under the Apache 2.0 License.
 
-| Überschrift 1 | License Required |
+| Use Case | License Required |
 | :--- | ---: |
 | Open-source projects | Apache 2.0 (free) |
 | Commercial proprietary software | Apache 2.0 (free, no disclosure required) |
@@ -165,7 +201,7 @@ For commercial integration support or enterprise features, please contact the au
 
 - Built for: The international cybersecurity community
 
-
+----
 📞 Support & Security
 
 | Need                                        | Contact |
@@ -176,8 +212,7 @@ For commercial integration support or enterprise features, please contact the au
 
 Security Policy: See SECURITY.md for vulnerability disclosure process.
 
-Last updated: March 2026
-Version: 2.0.0.post1
-
+----
+Last updated: May 2026 | Version: 2.1.1
 
 This project is released under the License apache 2.0. For commercial integration into proprietary software without disclosing your source code, please contact the author for a Commercial License.

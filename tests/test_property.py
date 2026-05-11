@@ -21,7 +21,7 @@ from flash512 import Flash512Vanguard
 @pytest.fixture(scope="module", autouse=True)
 def setup_env():
     """Configure le secret interne une fois pour tous les tests."""
-    os.environ["FLASH512_VANGUARD_CORE"] = "test-secret-fort-32-caracteres-minimum-xyz"
+    os.environ["FLASH512_VANGUARD_CORE"] = "A" * 64
     yield
     # Nettoyage optionnel après les tests
     del os.environ["FLASH512_VANGUARD_CORE"]

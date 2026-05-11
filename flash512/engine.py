@@ -15,6 +15,7 @@ from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.primitives import hashes
 from argon2 import PasswordHasher, Type  # argon2-cffi
+from argon2.low_level import hash_secret_raw, Type
 
 # --- Configuration du module ---
 _LOADED_INTEGRITY_OK = False
@@ -53,6 +54,10 @@ class Flash512Vanguard:
     Version 2.1 - Military Grade.
     """
 
+    # Variables de classe
+    _CORE_SECRET = None
+    _INITIALIZED = False
+
     # Paramètres Argon2id recommandés pour Military Grade
     ARGON2_MEMORY_COST = int(os.environ.get('ARGON2_MEMORY_COST', 102400))      # 100 MB
     ARGON2_TIME_COST = int(os.environ.get('ARGON2_TIME_COST', 4))               # 4 itérations
@@ -72,42 +77,34 @@ class Flash512Vanguard:
     @classmethod
     def _initialize_core(cls):
         """Initialise le Core Secret depuis l'environnement."""
-        global _CORE_SECRET, _INITIALIZED
-        if _INITIALIZED:
-            return _CORE_SECRET
-
-        _CORE_SECRET = os.environ.get('FLASH512_VANGUARD_CORE')
-        if not _CORE_SECRET:
+        if cls._INITIALIZED:
+            return
+        
+        core = os.environ.get('FLASH512_VANGUARD_CORE')
+        if not core:
             raise EnvironmentError(
-                "FLASH512_VANGUARD_CORE n'est pas défini dans l'environnement. "
-                "C'est obligatoire en version 2.1."
+                "FLASH512_VANGUARD_CORE n'est pas défini dans l'environnement."
             )
-        if len(_CORE_SECRET) < 64:
+        if len(core) < 64:
             raise ValueError("FLASH512_VANGUARD_CORE doit faire au moins 64 caractères.")
-        _INITIALIZED = True
-        cls.AUDIT_LOGGER.info(f"Core initialized at {datetime.now(timezone.utc).isoformat()}")
-        return _CORE_SECRET
+        
+        cls._CORE_SECRET = core      # ← Stocke dans la variable de classe
+        cls._INITIALIZED = True      # ← Marque comme initialiséT
 
     @classmethod
     def _derive_key_argon2id(cls, secret: str, salt: bytes) -> bytes:
         """
-        Dérive une clé de 256 bits avec Argon2id.
-        Résistant aux GPU et ASIC.
+        Dérive une clé de 256 bits avec Argon2id (brute, sans parsing base64).
         """
-        hasher = PasswordHasher(
+        return hash_secret_raw(
+            secret.encode("utf-8"),
+            salt,
             time_cost=cls.ARGON2_TIME_COST,
             memory_cost=cls.ARGON2_MEMORY_COST,
             parallelism=cls.ARGON2_PARALLELISM,
-            hash_len=32,  # 256 bits pour AES-256
-            type=Type.ID,  # Argon2id
+            hash_len=32,
+            type=Type.ID,
         )
-        # Le salt doit être encodé en base64 pour PasswordHasher
-        salt_b64 = b64encode(salt).decode('ascii')
-        derived = hasher.hash(secret, salt=salt_b64)
-        # Extraire le hash brut du format argon2
-        # Format: $argon2id$v=19$m=...,t=...,p=...$<salt>$<hash>
-        hash_bytes = b64decode(derived.split('$')[-1])
-        return hash_bytes[:32]  # 256 bits
 
     @classmethod
     def _derive_key_pbkdf2(cls, secret: str, salt: bytes) -> bytes:
@@ -127,6 +124,13 @@ class Flash512Vanguard:
         :param use_argon2: Utilise Argon2id (défaut) ou PBKDF2 si False.
         """
         cls._initialize_core()
+
+        if not plaintext:
+            raise ValueError("Le texte ne peut pas être vide")
+        if not user_secret:
+            raise ValueError("Le mot de passe ne peut pas être vide")
+        if len(user_secret) < 6:
+            raise ValueError("Le mot de passe doit faire au moins 6 caractères")
 
         # 1. Générer nonce et salt cryptographiquement sûrs
         nonce = os.urandom(cls.NONCE_SIZE)

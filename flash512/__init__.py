@@ -14,5 +14,5 @@ if platform.system() == 'Linux':
 from .engine import Flash512Vanguard
 from .secure_memory import SecureBuffer, secure_open
 
-__version__ = "2.1.0"
+__version__ = "2.1.1"
 __all__ = ['Flash512Vanguard', 'SecureBuffer', 'secure_open']

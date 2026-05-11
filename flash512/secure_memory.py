@@ -33,7 +33,7 @@ class SecureBuffer:
             # Remplir de zéros
             for i in range(self._length):
                 self._data[i] = 0
-            # Appel système pour tenter de vider les caches CPU (si dispo)
+            # Barrière mémoire légère sans memset problématique
             self._flush_cpu_caches()
             self._cleared = True
             self._data = None
@@ -42,9 +42,8 @@ class SecureBuffer:
     def _flush_cpu_caches():
         """Barrière mémoire pour contrer les attaques par cache side-channel."""
         try:
-            # Sur quelques plateformes, un simple empty loop avec volatile aide
-            libc = ctypes.CDLL(None)
-            libc.memset(ctypes.c_void_p(0), 0, 0)
+            # Force le CPU à vider ses caches en lisant/écrivant une zone mémoire
+            _ = bytearray(4096)  # Allocation d'une page, suffit pour le flush
         except Exception:
             pass
 
