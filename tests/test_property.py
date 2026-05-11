@@ -72,7 +72,7 @@ def test_encrypt_decrypt_roundtrip(plaintext, password):
     Ce test est exécuté 500 fois avec des données aléatoires.
     Si une seule combinaison échoue, hypothesis trouve le cas minimal.
     """
-    token = Flash512Vanguard.protect(plaintext, password)
+    token = Flash512Vanguard.protect(plaintext, password, use_argon2=False)
     result = Flash512Vanguard.open(token, password)
     
     assert result == plaintext, f"Roundtrip failed: {repr(plaintext)} != {repr(result)}"
@@ -92,7 +92,8 @@ def test_wrong_password_always_fails(plaintext, password, wrong_password):
     """
     assume(password != wrong_password)
     
-    token = Flash512Vanguard.protect(plaintext, password)
+    token = Flash512Vanguard.protect(plaintext, password, use_argon2=False)
+    #result = Flash512Vanguard.open(token, password)
     
     with pytest.raises(Exception):  # InvalidTag ou autre
         Flash512Vanguard.open(token, wrong_password)
@@ -109,8 +110,8 @@ def test_polymorphic_output(plaintext, password):
     
     Grâce au nonce aléatoire, le output doit être unique à chaque appel.
     """
-    token1 = Flash512Vanguard.protect(plaintext, password)
-    token2 = Flash512Vanguard.protect(plaintext, password)
+    token1 = Flash512Vanguard.protect(plaintext, password, use_argon2=False)
+    token2 = Flash512Vanguard.protect(plaintext, password, use_argon2=False)
     
     assert token1 != token2, "Nonce doit être aléatoire à chaque appel"
 
@@ -126,8 +127,8 @@ def test_edge_cases_roundtrip(plaintext, password):
     
     Test dédié aux cas qui cassent souvent les implémentations crypto.
     """
-    token = Flash512Vanguard.protect(plaintext, password)
-    result = Flash512Vanguard.open(token, password)
+    token = Flash512Vanguard.protect(plaintext, password, use_argon2=False)
+    result = Flash512Vanguard.open(token, password) 
     
     assert result == plaintext, f"Edge case failed: {repr(plaintext)}"
 
@@ -156,13 +157,13 @@ def test_empty_plaintext_rejected():
 
 def test_verify_true_with_correct_password():
     """verify() retourne True avec le bon password."""
-    token = Flash512Vanguard.protect("test data", "correct-password")
+    token = Flash512Vanguard.protect("test data", "correct-password", use_argon2=False)
     assert Flash512Vanguard.verify(token, "correct-password") is True
 
 
 def test_verify_false_with_wrong_password():
     """verify() retourne False avec un mauvais password."""
-    token = Flash512Vanguard.protect("test data", "correct-password")
+    token = Flash512Vanguard.protect("test data", "correct-password", use_argon2=False)
     assert Flash512Vanguard.verify(token, "wrong-password") is False
 
 
@@ -172,7 +173,7 @@ def test_rotate_secret_preserves_data():
     old_pwd = "ancien-password"
     new_pwd = "nouveau-password"
     
-    token_old = Flash512Vanguard.protect(original, old_pwd)
+    token_old = Flash512Vanguard.protect(original, old_pwd, use_argon2=False)
     token_new = Flash512Vanguard.rotate_secret(token_old, old_pwd, new_pwd)
     
     # Ancien token ne marche plus avec nouveau password

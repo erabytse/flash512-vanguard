@@ -36,6 +36,6 @@ class TestMilitaryGrade:
             Flash512Vanguard.open(bad_token, "Secret1")
 
     def test_wrong_password_fails(self):
-        token = Flash512Vanguard.protect("Correct", "Pass1")
+        token = Flash512Vanguard.protect("Correct", "Pass123")
         with pytest.raises(ValueError):
             Flash512Vanguard.open(token, "WrongPass")
