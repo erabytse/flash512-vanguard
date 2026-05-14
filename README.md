@@ -1,4 +1,7 @@
+<p align="center"><img width="170" height="177" alt="flash512_pic" src="https://github.com/user-attachments/assets/6175788a-e3e9-4c13-ba38-0356feab17ff" /></p>
+
 # ⚡ Flash512-Vanguard Bastion v2.1
+
 ## 🔐 Military Grade Hardened Encryption
 
 [![PyPI version](https://badge.fury.io/py/flash512-vanguard.svg)](https://pypi.org/project/flash512-vanguard/)
@@ -8,7 +11,7 @@
 [![Security](https://img.shields.io/badge/security-military%20grade-red.svg)]()
 
 > **Next-Gen Secure Encryption Library for Python**  
-> Standard industriel AES-256-GCM + Argon2id/PBKDF2 durci + Gestion de clés professionnelle  
+> Standard industriel AES-256-GCM + Argon2id/PBKDF2 durci + Professional key management 
 > Engineered for extreme privacy, designed for the international cybersecurity community.
 
 ---
@@ -26,7 +29,7 @@ Standard encryption can be vulnerable if implemented incorrectly. Flash512-Vangu
 | **Memory Protection** | SecureBuffer with automatic wiping | Military-grade hygiene |
 | **Secret Management** | Environment-based + Key Manager | SOC2 compliant |
 
-> 🔒 **v2.1 Military Grade**: Introduction d'**Argon2id** par défaut, **SecureBuffer** pour l'effacement mémoire automatique, et **vérification d'intégrité** du module au chargement (anti-tampering).
+> 🔒 **v2.1 Military Grade**: Introduction of **Argon2id** by default, **SecureBuffer** for automatic memory erasure, and **integrity checking** of the module on loading (anti-tampering).
 
 ---
 
