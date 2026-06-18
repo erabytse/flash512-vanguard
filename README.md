@@ -157,13 +157,22 @@ Military Grade Decryption with SecureBuffer (v2.1+)
 
 ```python
 from flash512 import Flash512Vanguard
+import os
+from dotenv import load_dotenv
 
-token = Flash512Vanguard.protect("Message Top Secret", "MotDePasse")
+load_dotenv()
+
+# Internal secret (loaded automatically by Flash512Vanguard, no need to enter it)
+SECRET_KEY = os.getenv("FLASH512_VANGUARD_CORE")
+
+user_password = "MyUltraStrongSecret!"
+
+token = Flash512Vanguard.protect("Message Top Secret", user_password)
 
 # Use the “with” context for automatic memory deallocation
-with Flash512Vanguard.open(token, "MotDePasse") as buffer:
+with Flash512Vanguard.open(token, user_password) as buffer:
     # Process sensitive data ONLY within this protected block
-    traiter_donnees_sensibles(buffer.data)
+    processing_sensitive_data(buffer.data)
 # Here, the data has already been cleared from the random access memory (RAM)
 # Any attempt to access it will raise a RuntimeError
 ```
