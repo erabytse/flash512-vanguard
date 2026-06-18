@@ -125,40 +125,59 @@ FLASH512_VANGUARD_CORE=your-secure-random-secret-64-chars-min
 Basic Encryption (Zero Expertise Required)
 
 ```python
-from flash512 import Flash512Vanguard
 import os
 from dotenv import load_dotenv
+from flash512 import Flash512Vanguard
 
 load_dotenv()
 
-# Internal secret (loaded automatically by Flash512Vanguard, no need to enter it)
-SECRET_KEY = os.getenv("FLASH512_VANGUARD_CORE")
+# ✅ INTERNAL secret: loaded from the environment (never changes in production)
+INTERNAL_CORE = os.getenv("FLASH512_VANGUARD_CORE")
 
-user_password = "MyUltraStrongSecret!"
+# ✅ USER secret: provided by the user (may be rotated)
+user_password = os.getenv("USER_PASSWORD") 
 
-# Encrypt
-token = Flash512Vanguard.protect("Classified Data", user_password)
+# ✅ New USER secret: provided by the user (can be rotated)
+new_password = os.getenv("NEW_PASSWORD")
+
+# ✅ SENSITIVE data: the data we want to protect
+sensitive_message = os.getenv("SENSITIVE_DATA")
+
+# ✅ Encrypt using the USER password
+token = Flash512Vanguard.protect(sensitive_message, user_password)
 print(f"Secure Token: {token}")
 
-# Decrypt
+# ✅ Decrypt using the same USER password
 original = Flash512Vanguard.open(token, user_password)
 print(f"Decrypted: {original}")
 
-# Verify without decrypting
+# ✅ Check validity without decrypting for ressource management
 if Flash512Vanguard.verify(token, user_password):
     print("Token is valid ✓")
 
-# Rotate user password
-new_token = Flash512Vanguard.rotate_secret(token, user_password, "NewPassword")
+# ✅ Rotate: old USER password → new USER password
+new_token = Flash512Vanguard.rotate_secret(token, user_password, new_password)
+print(f"New token after rotation: {new_token}")
+
+# ✅ Verify that the new token works with the new password
+result = Flash512Vanguard.open(new_token, new_password)
+print(f"Decrypted with new password: {result}")
+
+# ✅ The old token should NO LONGER work with the old password (security)
+try:
+    Flash512Vanguard.open(new_token, user_password)
+    print("⚠️ Warning: old password still works (unexpected)")
+except Exception:
+    print("✓ Old password correctly rejected for new token")
 
 ```
 
 Military Grade Decryption with SecureBuffer (v2.1+)
 
 ```python
-from flash512 import Flash512Vanguard
 import os
 from dotenv import load_dotenv
+from flash512 import Flash512Vanguard
 
 load_dotenv()
 
