@@ -64,6 +64,12 @@ class Flash512Vanguard:
             user_secret: Mot de passe utilisateur (min 8 caractères recommandé)
             use_legacy: Force l'ancien algorithme custom (⚠️ déconseillé)
             compress: Active la compression avant chiffrement (⚠️ risque CRIME/BREACH)
+            plaintext: Données à protéger
+            user_secret: Mot de passe de l'UTILISATEUR FINAL (pas le secret interne !)
+        
+        Note:
+            ⚠️ Le secret interne FLASH512_VANGUARD_CORE est chargé automatiquement
+            depuis l'environnement. Il ne doit PAS être passé comme user_secret.
         
         Returns:
             str: Token chiffré encodé en base64url (URL-safe, sans padding)
