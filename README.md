@@ -126,6 +126,13 @@ Basic Encryption (Zero Expertise Required)
 
 ```python
 from flash512 import Flash512Vanguard
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# Internal secret (loaded automatically by Flash512Vanguard, no need to enter it)
+SECRET_KEY = os.getenv("FLASH512_VANGUARD_CORE")
 
 user_password = "MyUltraStrongSecret!"
 
