@@ -83,10 +83,10 @@ class Flash512Vanguard:
         core = os.environ.get('FLASH512_VANGUARD_CORE')
         if not core:
             raise EnvironmentError(
-                "FLASH512_VANGUARD_CORE n'est pas défini dans l'environnement."
+                "FLASH512_VANGUARD_CORE is not defined in the environment."
             )
         if len(core) < 64:
-            raise ValueError("FLASH512_VANGUARD_CORE doit faire au moins 64 caractères.")
+            raise ValueError("FLASH512_VANGUARD_CORE must be at least 64 characters long.")
         
         cls._CORE_SECRET = core      # ← Stocke dans la variable de classe
         cls._INITIALIZED = True      # ← Marque comme initialiséT
@@ -126,11 +126,11 @@ class Flash512Vanguard:
         cls._initialize_core()
 
         if not plaintext:
-            raise ValueError("Le texte ne peut pas être vide")
+            raise ValueError("The text cannot be emptye")
         if not user_secret:
-            raise ValueError("Le mot de passe ne peut pas être vide")
+            raise ValueError("The password cannot be blank")
         if len(user_secret) < 6:
-            raise ValueError("Le mot de passe doit faire au moins 6 caractères")
+            raise ValueError("The password must be at least 6 characters long")
 
         # 1. Générer nonce et salt cryptographiquement sûrs
         nonce = os.urandom(cls.NONCE_SIZE)
@@ -169,11 +169,11 @@ class Flash512Vanguard:
         try:
             parts = token.split('.')
             if len(parts) != 5:
-                raise ValueError("Format de token invalide")
+                raise ValueError("Invalid token format")
 
             version = b64decode(parts[0]).decode('ascii')
             if version not in ('v2.0', 'v2.1'):
-                raise ValueError(f"Version non supportée: {version}")
+                raise ValueError(f"Unsupported version: {version}")
 
             kdf_type = b64decode(parts[1])
             salt = b64decode(parts[2])
@@ -199,7 +199,7 @@ class Flash512Vanguard:
 
         except Exception as e:
             cls.AUDIT_LOGGER.warning(f"OPEN FAILED: {str(e)} | {datetime.now(timezone.utc).isoformat()}")
-            raise ValueError(f"Échec du déchiffrement: {str(e)}")
+            raise ValueError(f"Decryption failed: {str(e)}")
 
     @classmethod
     def verify(cls, token: str, user_secret: str) -> bool:
