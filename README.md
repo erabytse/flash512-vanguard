@@ -134,11 +134,11 @@ token = Flash512Vanguard.protect("Classified Data", user_password)
 print(f"Secure Token: {token}")
 
 # Decrypt
-original = Flash512Vanguard.open(token, "MyUltraStrongSecret")
+original = Flash512Vanguard.open(token, user_password)
 print(f"Decrypted: {original}")
 
 # Verify without decrypting
-if Flash512Vanguard.verify(token, "MyUltraStrongSecret"):
+if Flash512Vanguard.verify(token, user_password):
     print("Token is valid ✓")
 
 # Rotate user password
