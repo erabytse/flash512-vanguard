@@ -131,8 +131,9 @@ from flash512 import Flash512Vanguard
 
 load_dotenv()
 
+# ✅ INTERNAL secret: (loaded automatically by Flash512Vanguard, no need to enter it)
 # ✅ INTERNAL secret: loaded from the environment (never changes in production)
-INTERNAL_CORE = os.getenv("FLASH512_VANGUARD_CORE")
+SECRET_KEY = os.getenv("FLASH512_VANGUARD_CORE")
 
 # ✅ USER secret: provided by the user (may be rotated)
 user_password = os.getenv("USER_PASSWORD") 
@@ -181,12 +182,20 @@ from flash512 import Flash512Vanguard
 
 load_dotenv()
 
-# Internal secret (loaded automatically by Flash512Vanguard, no need to enter it)
-SECRET_KEY = os.getenv("FLASH512_VANGUARD_CORE")
+# ✅ INTERNAL secret: (loaded automatically by Flash512Vanguard, no need to enter it)
+# ✅ INTERNAL secret: loaded from the environment (never changes in production)
+INTERNAL_CORE = os.getenv("FLASH512_VANGUARD_CORE")
 
-user_password = "MyUltraStrongSecret!"
+# ✅ USER secret: provided by the user (may be rotated)
+user_password = os.getenv("USER_PASSWORD") 
 
-token = Flash512Vanguard.protect("Message Top Secret", user_password)
+# ✅ New USER secret: provided by the user (can be rotated)
+new_password = os.getenv("NEW_PASSWORD")
+
+# ✅ SENSITIVE data: the data we want to protect
+sensitive_message = os.getenv("SENSITIVE_DATA")
+
+token = Flash512Vanguard.protect(SENSITIVE_DATA, user_password)
 
 # Use the “with” context for automatic memory deallocation
 with Flash512Vanguard.open(token, user_password) as buffer:
