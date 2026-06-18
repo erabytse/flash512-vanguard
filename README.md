@@ -127,8 +127,10 @@ Basic Encryption (Zero Expertise Required)
 ```python
 from flash512 import Flash512Vanguard
 
+user_password = "MyUltraStrongSecret!"
+
 # Encrypt
-token = Flash512Vanguard.protect("Classified Data", "MyUltraStrongSecret")
+token = Flash512Vanguard.protect("Classified Data", user_password)
 print(f"Secure Token: {token}")
 
 # Decrypt
@@ -140,7 +142,7 @@ if Flash512Vanguard.verify(token, "MyUltraStrongSecret"):
     print("Token is valid ✓")
 
 # Rotate user password
-new_token = Flash512Vanguard.rotate_secret(token, "OldPassword", "NewPassword")
+new_token = Flash512Vanguard.rotate_secret(token, user_password, "NewPassword")
 
 ```
 
