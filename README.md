@@ -242,7 +242,7 @@ For commercial integration support or enterprise features, please contact the au
 ----
 🙏 Credits
 
-- Author: [@erabytse](https://fbfconsulting.org)
+- Author: [@erabytse](https://erabytse.github.io)
 
 - Architecture v2.0: Industry-standard AES-256-GCM backend
 
