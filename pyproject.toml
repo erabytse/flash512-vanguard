@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "flash512-vanguard"
-version = "3.0.0"
+version = "3.0.1"
 description = "Production-ready cryptographic abstraction layer for Python applications"
 readme = "README.md"
 requires-python = ">=3.8"
-license = {text = "MIT"}
+license = "MIT"
 authors = [
   { name="erabytse", email="contact@fbfconsulting.org" },
 ]
@@ -27,7 +27,6 @@ keywords = [
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
