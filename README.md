@@ -1,267 +1,297 @@
 <p align="center"><img width="170" height="177" alt="flash512_pic" src="https://github.com/user-attachments/assets/6175788a-e3e9-4c13-ba38-0356feab17ff" /></p>
 
-# ⚡ Flash512-Vanguard Bastion v2.1
+# Flash512-Vanguard
 
-## 🔐 Military Grade Hardened Encryption
+**Production-Ready Cryptographic Abstraction Layer for Python**
+A secure-by-default encryption library that combines AES-256-GCM with memory-hard key derivation (Argon2id/PBKDF2). Designed for applications that need strong encryption without requiring cryptographic expertise.
 
-[![PyPI version](https://badge.fury.io/py/flash512-vanguard.svg)](https://pypi.org/project/flash512-vanguard/)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![Tests](https://img.shields.io/badge/tests-500%2B%20passing-brightgreen.svg)]()
-[![Security](https://img.shields.io/badge/security-military%20grade-red.svg)]()
-
-> **Next-Gen Secure Encryption Library for Python**  
-> Standard industriel AES-256-GCM + Argon2id/PBKDF2 durci + Professional key management 
-> Engineered for extreme privacy, designed for the international cybersecurity community.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ---
 
-## 🛡️ Why Flash512-Vanguard?
+## 🎯 Philosophy
 
-Standard encryption can be vulnerable if implemented incorrectly. Flash512-Vanguard provides a **secure-by-default abstraction layer** that combines:
+Flash512-Vanguard is **not** a cryptographic primitive library. It's an **opinionated abstraction layer** that:
 
-| Layer | Implementation | Standard |
-|-------|---------------|----------|
-| **Primary KDF** | **Argon2id** (memory-hard, GPU/ASIC resistant) | OWASP ASVS V2.4 |
-| **Fallback KDF** | PBKDF2-HMAC-SHA512 with 100,000 iterations | OWASP recommended |
-| **Authenticated Encryption** | AES-256-GCM (128-bit tag) | NIST FIPS 197 |
-| **Secure Nonce** | Cryptographically random per operation | NIST SP 800-38D |
-| **Memory Protection** | SecureBuffer with automatic wiping | Military-grade hygiene |
-| **Secret Management** | Environment-based + Key Manager | SOC2 compliant |
+- ✅ Uses industry-standard primitives (AES-256-GCM, Argon2id, PBKDF2)
+- ✅ Makes the secure way the easy way (secure-by-default API)
+- ✅ Handles the hard problems (nonce management, parameter rotation, memory protection)
+- ✅ Provides backward compatibility (tokens are self-describing)
 
-> 🔒 **v2.1 Military Grade**: Introduction of **Argon2id** by default, **SecureBuffer** for automatic memory erasure, and **integrity checking** of the module on loading (anti-tampering).
+**We do NOT:**
 
----
-
-## 🚀 Key Features
-
-- ✅ **Polymorphic Output**: Same message encrypted twice = different tokens (random nonce)
-- ✅ **Full Integrity**: GCM authentication tag detects any tampering
-- ✅ **Key Rotation**: Built-in `rotate_secret()` for password changes
-- ✅ **Audit Logging**: Enterprise-ready audit trail (SOC2/HIPAA compatible)
-- ✅ **Memory Wiping**: SecureBuffer efface automatiquement les données sensibles après usage
-- ✅ **Anti-Brute Force**: Argon2id memory-hard KDF résiste aux GPU/ASIC
-- ✅ **Module Integrity**: Vérification HMAC-SHA512 au chargement contre les modifications non autorisées
-- ✅ **Simple API**: Méthodes `protect()` / `open()`, zero crypto expertise needed
+- ❌ Invent new cryptographic algorithms
+- ❌ Support legacy/deprecated algorithms (no RC4, DES, ECB, etc.)
+- ❌ Claim to be "unbreakable" or "military-grade" (we use precise technical language)
 
 ---
 
-## 📢 Official Release: Flash512-Vanguard Bastion v2.1
+## 🚀 Quick Start
 
-**erabytse** is proud to announce the launch of Flash512-Vanguard **Bastion v2.1**.
-
-This Military Grade release introduces critical security hardening:
-- 🔰 **Argon2id** : Dérivation de clé memory-hard pour résister aux attaques par force brute matérielles
-- 🧹 **SecureBuffer** : Effacement automatique et garanti des données déchiffrées en mémoire
-- 🛡️ **Module Integrity** : Vérification d'intégrité au chargement empêchant l'exécution de code modifié
-- 🔒 **Core Dump Lock** : Désactivation automatique des core dumps sur Linux
-
-The underlying industry-standard **AES-256-GCM** ensures:
-- 🌍 **Interoperability** with other systems and languages
-- 🔐 **Auditability** by third-party security firms
-- ⚡ **Performance** via hardware acceleration (AES-NI)
-- 📜 **Compliance** with NIST, FIPS, and enterprise security policies
-
-The legacy v1.0 algorithm remains available via `use_legacy=True` for backward compatibility only.
-
----
-
-## 🛡️ Vision
-
-In an era of increasing cyber threats, we believe that encryption should be more than just a standard; it should be an **evolving fortress**. Flash512-Vanguard is our first step toward a suite of tools dedicated to **Digital Sovereignty** and **Advanced Privacy**.
-
-**Our commitment**: Security through **transparency**, not obscurity. We use peer-reviewed standards so you can sleep at night.
-
----
-
-## 💼 Commercial & Support
-
-While the core engine is open-source under **Apache 2.0**, erabytse offers professional tiers for enterprise needs:
-
-| Tier | Features | Price |
-|------|----------|-------|
-| **Core** | AES-GCM engine, Key Manager, audit logging, SecureBuffer | Free (Apache 2.0) |
-| **Pro Support** | SLA 24h, priority patches, integration help | 499€/month |
-| **Enterprise** | HSM/TPM support, SIEM integration, training | Custom quote |
-
-**Services**:
-- 🔐 **Custom Core Provisioning**: Tailored solutions for enterprise-grade isolation
-- 🛡️ **Security Consulting**: Implementation audits for your infrastructure
-- 📚 **Training**: Team workshops on secure encryption practices
-
-📧 **Contact**: contact@fbfconsulting.org
-
----
-
-## 💻 Quick Start
-
-### 🔧 Installation v2.1
+### Installation
 
 ```bash
-pip install flash512-vanguard==2.1.1
-```
-## 🔑 Configuration
-Before using the engine, you must provision your Internal Core Secret. 
-This secret acts as the unique architectural soul of your encryption.
-
-**On Linux/Mac:**
-```bash
-export FLASH512_VANGUARD_CORE="your-secure-random-secret-64-chars-min"
+pip install flash512-vanguard
 ```
 
-**On Windows (PowerShell):**
-```powershell
-$env:FLASH512_VANGUARD_CORE="your-secure-random-secret-64-chars-min"
-```
-
-Or create a .env file at your project root:
-```test
-FLASH512_VANGUARD_CORE=your-secure-random-secret-64-chars-min
-```
-
-⚠️ Security Note: Never commit .env to version control. Add it to .gitignore.
-
-📖 Usage
-Basic Encryption (Zero Expertise Required)
+Basic Usage
 
 ```python
 import os
-from dotenv import load_dotenv
 from flash512 import Flash512Vanguard
 
-load_dotenv()
+# Set the Core Secret (required, must be >= 64 chars)
+os.environ['FLASH512_VANGUARD_CORE'] = 'your-super-secret-core-key-at-least-64-characters-long'
 
-# ✅ INTERNAL secret: (loaded automatically by Flash512Vanguard, no need to enter it)
-# ✅ INTERNAL secret: loaded from the environment (never changes in production)
-SECRET_KEY = os.getenv("FLASH512_VANGUARD_CORE")
+# Encrypt data
+plaintext = b"Sensitive user data"
+password = "UserPassword123!"
 
-# ✅ USER secret: provided by the user (may be rotated)
-user_password = os.getenv("USER_PASSWORD") 
+token = Flash512Vanguard.protect(plaintext, password)
+print(f"Token: {token}")
+# Output: v3.A.bWVtPTEwMjQwMCx0aW1lPTQscGFyYWxsZWw9Mg==...
 
-# ✅ New USER secret: provided by the user (can be rotated)
-new_password = os.getenv("NEW_PASSWORD")
-
-# ✅ SENSITIVE data: the data we want to protect
-sensitive_message = os.getenv("SENSITIVE_DATA")
-
-# ✅ Encrypt using the USER password
-token = Flash512Vanguard.protect(sensitive_message, user_password)
-print(f"Secure Token: {token}")
-
-# ✅ Decrypt using the same USER password
-original = Flash512Vanguard.open(token, user_password)
-print(f"Decrypted: {original}")
-
-# ✅ Check validity without decrypting for ressource management
-if Flash512Vanguard.verify(token, user_password):
-    print("Token is valid ✓")
-
-# ✅ Rotate: old USER password → new USER password
-new_token = Flash512Vanguard.rotate_secret(token, user_password, new_password)
-print(f"New token after rotation: {new_token}")
-
-# ✅ Verify that the new token works with the new password
-result = Flash512Vanguard.open(new_token, new_password)
-print(f"Decrypted with new password: {result}")
-
-# ✅ The old token should NO LONGER work with the old password (security)
-try:
-    Flash512Vanguard.open(new_token, user_password)
-    print("⚠️ Warning: old password still works (unexpected)")
-except Exception:
-    print("✓ Old password correctly rejected for new token")
-
+# Decrypt data
+decrypted = Flash512Vanguard.open(token, password)
+assert decrypted == plaintext
 ```
 
-Military Grade Decryption with SecureBuffer (v2.1+)
+Secure Memory Management
 
 ```python
-import os
-from dotenv import load_dotenv
-from flash512 import Flash512Vanguard
+from flash512 import Flash512Vanguard, secure_open
 
-load_dotenv()
+# Decrypt into a memory-hardened buffer that auto-wipes
+token = Flash512Vanguard.protect(b"Secret", "Pass123")
 
-# ✅ INTERNAL secret: (loaded automatically by Flash512Vanguard, no need to enter it)
-# ✅ INTERNAL secret: loaded from the environment (never changes in production)
-INTERNAL_CORE = os.getenv("FLASH512_VANGUARD_CORE")
-
-# ✅ USER secret: provided by the user (may be rotated)
-user_password = os.getenv("USER_PASSWORD") 
-
-# ✅ New USER secret: provided by the user (can be rotated)
-new_password = os.getenv("NEW_PASSWORD")
-
-# ✅ SENSITIVE data: the data we want to protect
-sensitive_message = os.getenv("SENSITIVE_DATA")
-
-token = Flash512Vanguard.protect(SENSITIVE_DATA, user_password)
-
-# Use the “with” context for automatic memory deallocation
-with Flash512Vanguard.open(token, user_password) as buffer:
-    # Process sensitive data ONLY within this protected block
-    processing_sensitive_data(buffer.data)
-# Here, the data has already been cleared from the random access memory (RAM)
-# Any attempt to access it will raise a RuntimeError
+with secure_open(token, "Pass123") as buffer:
+    plaintext = buffer.data
+    # Process plaintext...
+# Buffer is automatically wiped here (overwritten with zeros)
 ```
 
-🧪 Testing
+## 🔐 Security Features
+
+1.Authenticated Encryption (AES-256-GCM)
+
+- Confidentiality: AES-256 in GCM mode
+- Integrity: GCM authentication tag detects tampering
+- Nonce Management: Cryptographically secure random nonces (96-bit, NIST SP 800-38D)
+
+  2.Memory-Hard Key Derivation
+
+- Primary: Argon2id (resistant to GPU/ASIC attacks)
+- Fallback: PBKDF2-HMAC-SHA512 (for compatibility)
+- Configurable Parameters: Memory cost, time cost, parallelism
+
+  3.Self-Describing Tokens
+
+Tokens include version and KDF parameters, enabling:
+
+- Backward compatibility (old tokens work with new library versions)
+- Parameter rotation (upgrade security without breaking existing data)
+
+Token Format (v3):
+
+```text
+v3 | kdf_type | kdf_params | salt | nonce | ciphertext
+```
+
+4.Memory Protection
+
+- mlock(): Prevents sensitive data from being swapped to disk
+- SecureBuffer: Auto-wipes memory on destruction
+- Context Manager: Automatic cleanup with with statement
+
+---
+
+## 📊 Threat Model
+
+**What Flash512-Vanguard Protects Against**:
+
+✅ Database Breach: If an attacker steals your database, they cannot decrypt tokens without:
+
+- The user's password
+- The Core Secret (server-side environment variable)
+
+✅ Tampering: GCM authentication detects any modification to tokens
+
+✅ Memory Attacks: mlock() prevents sensitive data from being written to swap files
+
+✅ Side-Channel Attacks: Uses constant-time operations where possible
+
+**What Flash512-Vanguard Does NOT Protect Against**:
+
+❌ Weak Passwords: If a user chooses "password123", no library can save them
+
+❌ Core Secret Compromise: If an attacker gains access to your server's environment variables, all bets are off
+
+❌ Client-Side Attacks: Keyloggers, screen capture, etc. are outside our scope
+
+❌ Quantum Computers: AES-256 is post-quantum secure, but Argon2id/PBKDF2 are not
+
+---
+
+## ⚙️ Configuration
+
+**Environment Variables**
 
 ```bash
-# Install dev dependencies
-pip install -e .[dev]
+# Required: Core Secret (must be >= 64 characters)
+export FLASH512_VANGUARD_CORE="your-super-secret-core-key..."
 
-# Run all tests (500+ random cases)
-pytest tests/ -v
+# Optional: Argon2id parameters (OWASP recommended defaults)
+export ARGON2_MEMORY_COST=102400  # 100 MB
+export ARGON2_TIME_COST=4         # 4 iterations
+export ARGON2_PARALLELISM=2       # 2 threads
+```
 
-# Run military-grade specific tests
-pytest tests/test_military_grade.py -v
+**\***Choosing KDF Parameters**\***
+
+**For most applications (default)**:
+
+- Memory: 100 MB
+- Time: 4 iterations
+- Parallelism: 2 threads
+
+**For high-security applications:**
+
+- Memory: 256 MB
+- Time: 6 iterations
+- Parallelism: 4 threads
+
+**For low-resource environments (use PBKDF2):**
+
+```python
+token = Flash512Vanguard.protect(data, password, use_argon2=False)
+```
+
+---
+
+## 🔄 Migration & Backward Compatibility
+
+**Token Versioning**
+
+Flash512-Vanguard tokens are versioned. The library automatically detects the version and uses the correct parameters.
+
+Supported versions:
+
+- v2.0 / v2.1: Legacy format (no KDF parameters in token)
+- v3: Current format (self-describing, includes KDF parameters)
+
+**Rotating KDF Parameters**
+
+If you want to increase security (e.g., higher Argon2 memory cost), new tokens will use the new parameters automatically. Old tokens remain decryptable because they include their original parameters.
+
+```python
+# Old token (created with mem=102400)
+old_token = "v3.A.bWVtPTEwMjQwMCx0aW1lPTQscGFyYWxsZWw9Mg==..."
+
+# Still works, even if you changed ARGON2_MEMORY_COST to 204800
+plaintext = Flash512Vanguard.open(old_token, password)
+```
+
+---
+
+## 🧪 Testing
+
+```bash
+# Run all tests
+pytest tests/
+
+# Run with coverage
+pytest --cov=flash512 tests/
 
 # Run property-based tests
-pytest tests/test_property.py -v
+pytest tests/test_property.py
 ```
 
-📜 License & Commercial Use
+---
 
-This project is released under the Apache 2.0 License.
+## 📚 API Reference
 
-| Use Case | License Required |
-| :--- | ---: |
-| Open-source projects | Apache 2.0 (free) |
-| Commercial proprietary software | Apache 2.0 (free, no disclosure required) |
-| Enterprise support & SLA | Commercial agreement |
-| HSM/TPM integration | Enterprise license |
+> Flash512Vanguard.protect(plaintext: bytes, user_secret: str, use_argon2: bool = True) -> str
 
+Encrypt data and return a self-describing token.
 
-For commercial integration support or enterprise features, please contact the author:
+**Parameters:**
 
-📧 Email: contact@fbfconsulting.org
+- plaintext (bytes): Data to encrypt (must be bytes, not str)
+- user_secret (str): User-provided password (min 6 characters)
+- use_argon2 (bool): Use Argon2id (default) or PBKDF2 if False
 
-🌐 GitHub: https://github.com/erabytse/flash512-vanguard
+Returns: Token string in v3 format
 
-----
-🙏 Credits
+**Raises:**
 
-- Author: [@erabytse](https://erabytse.github.io)
+- TypeError: If plaintext is not bytes
+- ValueError: If password is too short or plaintext is empty
+- EnvironmentError: If FLASH512_VANGUARD_CORE is not set
 
-- Architecture v2.0: Industry-standard AES-256-GCM backend
+> Flash512Vanguard.open(token: str, user_secret: str) -> bytes
 
-- Inspired by: OWASP, NIST, cryptography.io
+Decrypt a token and return the plaintext.
 
-- Built for: The international cybersecurity community
+**Parameters:**
 
-----
+- token (str): Token string from protect()
+- user_secret (str): User password used during encryption
+
+Returns: Decrypted data as bytes
+
+**Raises:**
+
+- ValueError: If token is invalid, tampered, or password is wrong
+
+> secure_open(token: str, secret: str) -> SecureBuffer
+
+Context manager that decrypts into a memory-hardened buffer.
+
+**Usage:**
+
+```python
+with secure_open(token, password) as buffer:
+    plaintext = buffer.data
+    # Process...
+# Buffer auto-wiped here
+```
+
+---
+
+## 🛡️ Security Best Practices
+
+1. Use a strong Core Secret: Generate with openssl rand -base64 64
+2. Rotate passwords: Use Flash512Vanguard.rotate_secret() periodically
+3. Monitor audit logs: The library logs all encryption/decryption events
+4. Use SecureBuffer: Always use secure_open() for sensitive data
+5. Keep dependencies updated: Run pip-audit regularly
+
+---
+
+## 🤝 Contributing
+
+## Contributions are welcome! Please read CONTRIBUTING.md for guidelines.
+
+## 📄 License
+
+MIT License - see LICENSE for details.
+
+---
+
+## 🙏 Acknowledgments
+
+Built on top of:
+
+- cryptography - AES-256-GCM implementation
+
+- argon2-cffi - Argon2id implementation
+
+---
+
 📞 Support & Security
 
-| Need                                        | Contact |
-| :---                                        | :---                                             |
-| Technical support                           | support@fbfconsulting.org                         |
-| Security vulnerability                      | contact@fbfconsulting.org (do not open public issue) |
-| Commercial inquiry                          | contact@fbfconsulting.org                            |
+- Issues: GitHub Issues
+- Security vulnerabilities: See SECURITY.md
 
-Security Policy: See SECURITY.md for vulnerability disclosure process.
-
-----
-Last updated: May 2026 | Version: 2.1.1
-
-This project is released under the License apache 2.0. For commercial integration into proprietary software without disclosing your source code, please contact the author for a Commercial License.
+---

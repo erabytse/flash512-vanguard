@@ -1,62 +1,115 @@
 """
-SecureMemoryManager - Military-grade memory wiping for Python
-Utilise ctypes pour écraser les buffers sensibles avant libération.
+SecureMemoryManager - Memory-hardened buffer management for Python
+
+Uses ctypes to lock memory pages (prevent swapping) and securely wipe buffers.
 """
+
 import ctypes
+import ctypes.util
 import sys
 from contextlib import contextmanager
-from typing import Any
+from typing import Optional
+
 
 class SecureBuffer:
     """
-    Gestionnaire de buffer à effacement automatique.
-    Remplace les données par des zéros OU des données aléatoires avant garbage collection.
+    Memory-hardened buffer that prevents swapping to disk and auto-wipes on destruction.
+    
+    Features:
+    - Locks memory pages using mlock() to prevent swapping to disk
+    - Overwrites data with zeros before garbage collection
+    - Context manager support for automatic cleanup
     """
-
-    __slots__ = ('_data', '_length', '_cleared')
-
+    
+    __slots__ = ('_buffer', '_size', '_locked', '_cleared')
+    
     def __init__(self, data: bytes):
-        self._length = len(data)
-        # Créer un bytearray mutable
-        self._data = bytearray(data)
+        if not isinstance(data, bytes):
+            raise TypeError("SecureBuffer requires bytes, not str")
+        
+        self._size = len(data)
         self._cleared = False
-
+        self._locked = False
+        
+        # Allocate mutable buffer using ctypes
+        self._buffer = (ctypes.c_ubyte * self._size)()
+        self._buffer[:] = data
+        
+        # Lock memory to prevent swapping to disk
+        self._lock_memory()
+    
+    def _lock_memory(self):
+        """Lock memory pages to prevent swapping to disk."""
+        try:
+            if sys.platform == 'win32':
+                # Windows: VirtualLock
+                ctypes.windll.kernel32.VirtualLock(
+                    ctypes.pointer(self._buffer),
+                    self._size
+                )
+                self._locked = True
+            else:
+                # Unix/Linux/macOS: mlock
+                libc_name = ctypes.util.find_library('c')
+                if libc_name:
+                    libc = ctypes.CDLL(libc_name)
+                    result = libc.mlock(ctypes.pointer(self._buffer), self._size)
+                    if result == 0:
+                        self._locked = True
+        except Exception:
+            # If mlock fails (e.g., insufficient permissions), continue without locking
+            # This is a best-effort security measure
+            pass
+    
+    def _unlock_memory(self):
+        """Unlock memory pages."""
+        if self._locked:
+            try:
+                if sys.platform == 'win32':
+                    ctypes.windll.kernel32.VirtualUnlock(
+                        ctypes.pointer(self._buffer),
+                        self._size
+                    )
+                else:
+                    libc_name = ctypes.util.find_library('c')
+                    if libc_name:
+                        libc = ctypes.CDLL(libc_name)
+                        libc.munlock(ctypes.pointer(self._buffer), self._size)
+            except Exception:
+                pass
+            finally:
+                self._locked = False
+    
     @property
     def data(self) -> bytes:
+        """Get a copy of the data. Caller is responsible for clearing."""
         if self._cleared:
             raise RuntimeError("SecureBuffer has been wiped and is no longer readable.")
-        return bytes(self._data)
-
+        return bytes(self._buffer)
+    
     def wipe(self):
-        """Écrase le buffer avec des zéros."""
-        if not self._cleared and self._data:
-            # Remplir de zéros
-            for i in range(self._length):
-                self._data[i] = 0
-            # Barrière mémoire légère sans memset problématique
-            self._flush_cpu_caches()
+        """Securely wipe the buffer by overwriting with zeros."""
+        if not self._cleared and self._buffer:
+            # Overwrite with zeros
+            for i in range(self._size):
+                self._buffer[i] = 0
+            
+            # Unlock memory
+            self._unlock_memory()
+            
             self._cleared = True
-            self._data = None
-
-    @staticmethod
-    def _flush_cpu_caches():
-        """Barrière mémoire pour contrer les attaques par cache side-channel."""
-        try:
-            # Force le CPU à vider ses caches en lisant/écrivant une zone mémoire
-            _ = bytearray(4096)  # Allocation d'une page, suffit pour le flush
-        except Exception:
-            pass
-
+            self._buffer = None
+    
     def __del__(self):
-        """Dernière chance : wipe au destructeur."""
+        """Last chance: wipe at destructor."""
         try:
             self.wipe()
         except Exception:
             pass
-
+    
     def __enter__(self):
         return self
-
+    
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.wipe()
         return False
@@ -65,12 +118,21 @@ class SecureBuffer:
 @contextmanager
 def secure_open(encrypted_token: str, secret: str) -> SecureBuffer:
     """
-    Déchiffre un token dans un SecureBuffer temporaire.
-    Le buffer est automatiquement effacé après le bloc with.
+    Decrypt a token into a temporary SecureBuffer.
+    
+    The buffer is automatically wiped after the with block exits.
+    
+    Usage:
+        with secure_open(token, password) as buffer:
+            plaintext = buffer.data
+            # Process plaintext...
+        # Buffer is automatically wiped here
     """
-    from .engine import Flash512Vanguard  # import local pour éviter circularité
-    plaintext = Flash512Vanguard.open(encrypted_token, secret)
-    buffer = SecureBuffer(plaintext if isinstance(plaintext, bytes) else plaintext.encode('utf-8'))
+    from .engine import Flash512Vanguard  # Local import to avoid circularity
+    
+    plaintext_bytes = Flash512Vanguard.open(encrypted_token, secret)
+    buffer = SecureBuffer(plaintext_bytes)
+    
     try:
         yield buffer
     finally:

@@ -4,48 +4,94 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "flash512-vanguard"
-version = "2.1.1"
+version = "3.0.0"
+description = "Production-ready cryptographic abstraction layer for Python applications"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
 authors = [
-  { name="erabytse", email="support@fbfconsulting.org" },
+  { name="erabytse", email="contact@fbfconsulting.org" },
 ]
 maintainers = [
     { name = "TakoUlzO", email = "contact@fbfconsulting.org" }
 ]
-description = "Military Grade Hardened Encryption Library - AES-256-GCM + Argon2id + SecureMemory - Professional Secure Hashing & Encryption Library - AES-256-GCM Backend"
-readme = "README.md"
-requires-python = ">=3.8"
-license = {text = "Apache-2.0"}
+keywords = [
+    "cryptography",
+    "encryption",
+    "security",
+    "aes-256-gcm",
+    "argon2",
+    "pbkdf2",
+    "secure-by-default"
+]
 classifiers = [
-    "Programming Language :: Python :: 3",
-    "Operating System :: OS Independent",
-    "Topic :: Security :: Cryptography",
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security :: Cryptography",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
 ]
 dependencies = [
-    "cryptography>=42.0.0",
-    "python-dotenv>=1.0.0",
-    "argon2-cffi>=23.1.0",
+    "cryptography>=41.0.0",
+    "argon2-cffi>=21.0.0",
 ]
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=8.0",
-    "pytest-timeout>=2.3.0",
-    "argon2-cffi>=23.1.0",
-    "pytest-cov>=5.0.0",
-    "hypothesis>=6.100.0",
-    "black>=24.0",
-    "mypy>=1.0",
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-timeout>=2.0.0",
+    "hypothesis>=6.0.0",
+    "black>=23.0.0",
+    "mypy>=1.0.0",
 ]
 
+[project.urls]
+Homepage = "https://github.com/erabytse/flash512-vanguard"
+Documentation = "https://github.com/erabytse/flash512-vanguard#readme"
+Repository = "https://github.com/erabytse/flash512-vanguard"
+Issues = "https://github.com/erabytse/flash512-vanguard/issues"
+
 [tool.setuptools.packages.find]
+where = ["."]
 include = ["flash512*"]
-exclude = ["tests*", "menv*"]
 
 [tool.setuptools.package-data]
-flash512 = ["py.typed"]  
+flash512 = ["py.typed"]
 
-[project.urls]
-"Homepage" = "https://github.com/erabytse/flash512-vanguard"
-"Bug Tracker" = "https://github.com/erabytse/flash512-vanguard/issues"
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
+
+[tool.coverage.run]
+source = ["flash512"]
+omit = ["tests/*", "menv/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]
+
+[tool.black]
+line-length = 100
+target-version = ['py38', 'py39', 'py310', 'py311', 'py312']
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
