@@ -121,4 +121,5 @@ new_token = Flash512Vanguard.protect(b"data", password)
 
 # Old tokens still work (they include their original parameters)
 old_plaintext = Flash512Vanguard.open(old_token, password)
+
 ```
